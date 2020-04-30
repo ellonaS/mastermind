@@ -10,7 +10,7 @@ export default {
       gameComplexity: 4,
       selected: [],
       options: [
-        { value: null, text: "Please select an option" },
+        { value: null, text: "select", disabled: true },
         { value: "1", text: "Red" },
         { value: "2", text: "Blue" },
         { value: "3", text: "Yellow" },

@@ -2,7 +2,7 @@
   <div class="home">
     <b-row v-for="guess in guesses" :key="guess.guessNumber">
       <b-col v-for="color in gameComplexity" :key="color" md="2">
-        <game-board :class="guess.guessNumber" :id="guess.guessNumber + '.' + color"></game-board>
+        <game-board :class="guess.guessNumber"></game-board>
       </b-col>
       <b-col md="2">
         <b-button squared variant="outline-secondary" @click="makeAGuess(guess)">Submit Your Code</b-button>
@@ -63,13 +63,20 @@ export default {
     },
     checkGuess(guessedCode, guessNumber) {
       this.guesses.forEach((item, index) => {
-        if (item.guessNumber == guessNumber) { //finds the correct guessnumber to evaluate the guess and save it
+        if (item.guessNumber == guessNumber) {
+          //finds the correct guessnumber to evaluate the guess and save it
           item.colors = guessedCode;
-          for (let i = 0; i < this.randomCode.length; i++) {//compares the guess and the real code
-            if (this.randomCode[i] == item.colors[i]) { //check for colors in the correct position
+          for (let i = 0; i < this.randomCode.length; i++) {
+            //compares the guess and the real code
+            if (this.randomCode[i] == item.colors[i]) {
+              //check for colors in the correct position
               this.guesses[index].correct += 1;
-            } else if (this.randomCode.indexOf(item.colors[i]) >= 0) { //check for misplaced colors
+            } else if (this.randomCode.indexOf(guessedCode[i]) >= 0) {
+              //check for misplaced colors
+              console.log("counting misplaced");
               this.guesses[index].misplaced += 1;
+            } else {
+              console.log("misplaced skip");
             }
           }
         }
