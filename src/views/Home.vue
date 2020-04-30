@@ -1,13 +1,13 @@
 <template>
   <div class="home">
     <b-row v-for="guess in guesses" :key="guess.guessNumber">
-      <b-col v-for="color in gameComplexity" :key="color" md="2">
+      <b-col v-for="color in gameComplexity" :key="color" sm="2">
         <game-board :class="guess.guessNumber"></game-board>
       </b-col>
-      <b-col md="2">
+      <b-col sm="2">
         <b-button squared variant="outline-secondary" @click="makeAGuess(guess)">Submit Your Code</b-button>
       </b-col>
-      <b-col md="2">
+      <b-col sm="2">
         <span>Correct: {{guess.correct}}; misplaced: {{guess.misplaced}}</span>
       </b-col>
     </b-row>
@@ -45,7 +45,7 @@ export default {
     const max = 6;
     //Getting a random integer between two values
     //returns a random number between min and max (both included):
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i <= this.gameComplexity; i++) {
       this.randomCode.push(Math.floor(Math.random() * (max - min + 1) + min));
     }
     return this.randomCode;
@@ -57,27 +57,35 @@ export default {
       const guessedCode = [];
       //iterate through select divs, read their input values and save them in the array
       colorsSelected.forEach(element => {
+        //parsing string value to int
         guessedCode.push(parseInt(element.value));
       });
       this.checkGuess(guessedCode, guess.guessNumber);
     },
     checkGuess(guessedCode, guessNumber) {
+      //create a clone of the real code to count misplaced colors
+      let randomCodeClone = this.randomCode.map(x => x);
       this.guesses.forEach((item, index) => {
         if (item.guessNumber == guessNumber) {
           //finds the correct guessnumber to evaluate the guess and save it
           item.colors = guessedCode;
-          for (let i = 0; i < this.randomCode.length; i++) {
+          //create a clone of the guessed code to count misplaced colors
+          guessedCode = guessedCode.map(x => x);
+          for (let i = 0; i < randomCodeClone.length; i++) {
             //compares the guess and the real code
-            if (this.randomCode[i] === item.colors[i]) {
+            if (randomCodeClone[i] === guessedCode[i]) {
               //check for colors in the correct position
               this.guesses[index].correct += 1;
-              //parsing string value to int
-            } else if (this.randomCode.indexOf(item.colors[i]) >= 0) {
-              //check for misplaced colors
-              console.log("counting misplaced");
-              this.guesses[index].misplaced += 1;
-            } else {
-              console.log(this.randomCode.indexOf(item.colors[i]));
+              //null values that have been guessed correctly
+              randomCodeClone[i] = null;
+              guessedCode[i] = null;
+
+            } else 
+            for(let j = 0; j < randomCodeClone.length; j++) {
+              if(guessedCode[i] === randomCodeClone[j]) {
+                this.guesses[index].misplaced += 1;
+                randomCodeClone[j] = null;
+              }
             }
           }
         }

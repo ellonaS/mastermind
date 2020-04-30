@@ -1,5 +1,5 @@
 <template>
-      <b-form-select v-model="selected" :options="options"></b-form-select>
+      <b-form-select v-model="selected" :options="options" :class="text"></b-form-select>
 </template>
 
 <script>
@@ -7,27 +7,23 @@ export default {
   name: "game-board",
   data() {
     return {
-      gameComplexity: 4,
       selected: [],
       options: [
-        { value: null, text: "select", disabled: true },
         { value: 1, text: "Red" },
         { value: 2, text: "Blue" },
         { value: 3, text: "Yellow" },
         { value: 4, text: "Green" },
         { value: 5, text: "Purple" },
-        { value: 6, text: "grey" }
+        { value: 6, text: "Gray" }
       ]
     };
   },
-  methods: {
-    selectionMade() {
-      this.selection = document.getElementById("search").value;
-      this.$emit("filter-tools", this.query);
-    }
-  }
 };
 </script>
 
 <style scoped>
+.Red {
+    background-color: red;
+}
+
 </style>
