@@ -57,7 +57,7 @@ export default {
       const guessedCode = [];
       //iterate through select divs, read their input values and save them in the array
       colorsSelected.forEach(element => {
-        guessedCode.push(element.value);
+        guessedCode.push(parseInt(element.value));
       });
       this.checkGuess(guessedCode, guess.guessNumber);
     },
@@ -68,15 +68,16 @@ export default {
           item.colors = guessedCode;
           for (let i = 0; i < this.randomCode.length; i++) {
             //compares the guess and the real code
-            if (this.randomCode[i] == item.colors[i]) {
+            if (this.randomCode[i] === item.colors[i]) {
               //check for colors in the correct position
               this.guesses[index].correct += 1;
-            } else if (this.randomCode.indexOf(guessedCode[i]) >= 0) {
+              //parsing string value to int
+            } else if (this.randomCode.indexOf(item.colors[i]) >= 0) {
               //check for misplaced colors
               console.log("counting misplaced");
               this.guesses[index].misplaced += 1;
             } else {
-              console.log("misplaced skip");
+              console.log(this.randomCode.indexOf(item.colors[i]));
             }
           }
         }

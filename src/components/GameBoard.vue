@@ -11,12 +11,12 @@ export default {
       selected: [],
       options: [
         { value: null, text: "select", disabled: true },
-        { value: "1", text: "Red" },
-        { value: "2", text: "Blue" },
-        { value: "3", text: "Yellow" },
-        { value: "4", text: "Green" },
-        { value: "5", text: "Purple" },
-        { value: "5", text: "grey" }
+        { value: 1, text: "Red" },
+        { value: 2, text: "Blue" },
+        { value: 3, text: "Yellow" },
+        { value: 4, text: "Green" },
+        { value: 5, text: "Purple" },
+        { value: 6, text: "grey" }
       ]
     };
   },
