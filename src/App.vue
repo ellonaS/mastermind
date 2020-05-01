@@ -1,18 +1,24 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <game-header/>
+    <router-view id="routerView"/>
   </div>
 </template>
 
 <script>
+import GameHeader from "@/components/GameHeader.vue";
+
 export default {
+  components: {
+    GameHeader
+  }
   
 }
 </script>
 <style>
-
+#routerView {
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
 </style>

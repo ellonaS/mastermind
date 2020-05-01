@@ -5,7 +5,12 @@
         <game-board :class="guess.guessNumber"></game-board>
       </b-col>
       <b-col sm="2">
-        <b-button squared variant="outline-secondary" @click="makeAGuess(guess)">Submit Your Code</b-button>
+        <b-button
+          squared
+          variant="outline-secondary"
+          @click="makeAGuess(guess)"
+          :class="guess.guessNumber"
+        >Submit Your Code</b-button>
       </b-col>
       <b-col sm="2">
         <span>Correct: {{guess.correct}}; misplaced: {{guess.misplaced}}</span>
@@ -51,7 +56,14 @@ export default {
     return this.randomCode;
   },
   methods: {
+    disableButton(guess) {
+      document
+        .getElementsByClassName(guess.guessNumber)
+        .forEach(element => (element.disabled = true));
+    },
     makeAGuess(guess) {
+      //disable button to prevent resubmission
+      this.disableButton(guess);
       //select all input elements in the specified guess
       const colorsSelected = document.getElementsByClassName(guess.guessNumber);
       const guessedCode = [];
@@ -79,14 +91,15 @@ export default {
               //null values that have been guessed correctly
               randomCodeClone[i] = null;
               guessedCode[i] = null;
-
-            } else 
-            for(let j = 0; j < randomCodeClone.length; j++) {
-              if(guessedCode[i] === randomCodeClone[j]) {
-                this.guesses[index].misplaced += 1;
-                randomCodeClone[j] = null;
-              }
             }
+            //check if the color is misplaced
+            else
+              for (let j = 0; j < randomCodeClone.length; j++) {
+                if (guessedCode[i] === randomCodeClone[j]) {
+                  this.guesses[index].misplaced += 1;
+                  randomCodeClone[j] = null;
+                }
+              }
           }
         }
       });
@@ -94,3 +107,6 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+</style>
