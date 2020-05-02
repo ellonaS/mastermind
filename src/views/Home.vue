@@ -1,19 +1,27 @@
 <template>
   <div class="home">
-    <b-row v-for="guess in guesses" :key="guess.guessNumber">
-      <b-col v-for="color in gameComplexity" :key="color" sm="2">
-        <game-board :class="guess.guessNumber"></game-board>
-      </b-col>
-      <b-col sm="2">
-        <b-button
-          squared
-          variant="outline-secondary"
-          @click="makeAGuess(guess)"
-          :class="guess.guessNumber"
-        >Submit Your Code</b-button>
-      </b-col>
-      <b-col sm="2">
-        <span>Correct: {{guess.correct}}; misplaced: {{guess.misplaced}}</span>
+    <b-form @submit="makeAGuess(guess)" v-for="guess in guesses" :key="guess.guessNumber">
+      <b-row>
+        <b-col v-for="color in gameComplexity" :key="color" sm="2">
+          <game-board :class="guess.guessNumber" required></game-board>
+        </b-col>
+        <b-col sm="2">
+          <b-button
+            type="submit"
+            squared
+            variant="outline-secondary"
+            :class="guess.guessNumber"
+          >Submit Your Code</b-button>
+        </b-col>
+        <b-col sm="2">
+          <span>Correct: {{guess.correct}}; misplaced: {{guess.misplaced}}</span>
+        </b-col>
+      </b-row>
+    </b-form>
+    <span>{{message}}</span>
+    <b-row v-if="isGameOver">
+      <b-col v-for="(color, index) in computerGeneratedColors" :key="index" sm="2">
+        <div>{{color}}</div>
       </b-col>
     </b-row>
   </div>
@@ -26,6 +34,8 @@ export default {
   name: "Home",
   data() {
     return {
+      isGameOver: false,
+      message: "",
       gameComplexity: 4,
       randomCode: [],
       guesses: [
@@ -44,6 +54,25 @@ export default {
   },
   components: {
     GameBoard
+  },
+  computed: {
+    computerGeneratedColors() {
+      return this.randomCode.map(x => {
+        if (x === 1) {
+          return "Red";
+        } else if (x === 2) {
+          return "Blue";
+        } else if (x === 3) {
+          return "Yellow";
+        } else if (x === 4) {
+          return "Green";
+        } else if (x === 5) {
+          return "Purple";
+        } else if (x === 6) {
+          return ("Gray");
+        }
+      });
+    }
   },
   created() {
     const min = 1;
@@ -72,7 +101,21 @@ export default {
         //parsing string value to int
         guessedCode.push(parseInt(element.value));
       });
-      this.checkGuess(guessedCode, guess.guessNumber);
+      this.checkGuess(
+        guessedCode.slice(0, guessedCode.length - 1),
+        guess.guessNumber
+      );
+    },
+    isGameWon(guessedCode, guessNumber) {
+      guessedCode = guessedCode.filter(element => element === null);
+      if (guessedCode.length === 0) {
+        this.messsage = "you won!";
+        this.isGameOver = true;
+      } else if (guessNumber == "guess10") {
+        this.message = "game over";
+        this.isGameOver = true;
+      } else 
+      this.message = "keep guessing";
     },
     checkGuess(guessedCode, guessNumber) {
       //create a clone of the real code to count misplaced colors
@@ -85,7 +128,7 @@ export default {
           guessedCode = guessedCode.map(x => x);
           for (let i = 0; i < randomCodeClone.length; i++) {
             //compares the guess and the real code
-            if (randomCodeClone[i] === guessedCode[i]) {
+            if (this.randomCode[i] === item.colors[i]) {
               //check for colors in the correct position
               this.guesses[index].correct += 1;
               //null values that have been guessed correctly
@@ -98,9 +141,12 @@ export default {
                 if (guessedCode[i] === randomCodeClone[j]) {
                   this.guesses[index].misplaced += 1;
                   randomCodeClone[j] = null;
+                  //break out of the loop if the match was found
+                  break;
                 }
               }
           }
+          this.isGameWon(guessedCode, guessNumber);
         }
       });
     }
